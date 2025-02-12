@@ -1,25 +1,51 @@
 <!DOCTYPE html>
-<html>
+<html lang="zh">
+<head>
+  <meta charset="UTF-8">
+  <title>义工小时查询</title>
+  <style>
+    body { font-family: Arial, sans-serif; margin: 20px; }
+    input, button { font-size: 1em; }
+    #result { margin-top: 20px; }
+  </style>
+</head>
 <body>
-  <h1>义工小时数查询</h1>
-  <input type="text" id="student_id" placeholder="请输入学号" />
-  <button onclick="queryHours()">查询</button>
+  <h1>义工小时查询</h1>
+  <form id="queryForm">
+    <label for="studentId">请输入您的学号：</label>
+    <input type="text" id="studentId" name="studentId" required>
+    <button type="submit">查询</button>
+  </form>
   <div id="result"></div>
-
+  
   <script>
-    function queryHours() {
-      const studentId = document.getElementById('student_id').value;
-      fetch('https://script.google.com/macros/s/AKfycbxaoxEtgZcOxNuR4vO8_WPnHRi8IzIVCGg6NWZbUrpjllWzdbJrM47tqtpVX76skWA/exec?student_id=' + studentId)
+    document.getElementById("queryForm").addEventListener("submit", function(e) {
+      e.preventDefault();
+      var studentId = document.getElementById("studentId").value.trim();
+      if (!studentId) return;
+      
+      // 构造请求 URL（注意参数名 studentId 与 Apps Script 中保持一致）
+      var url = "https://script.google.com/macros/s/AKfycbwSz7BVbGXEf4YVA--TSz6j7gIryiLK53CJXJKbV3OusvlGmp7vWuzxhYN6Yq9N-Stc2A/exec" + "?studentId=" + encodeURIComponent(studentId);
+      
+      // 发起请求并处理返回结果
+      fetch(url)
         .then(response => response.json())
         .then(data => {
-          if (data.error) {
-            document.getElementById('result').innerText = data.error;
+          var resultDiv = document.getElementById("result");
+          if (data.status === "success") {
+            var record = data.data;
+            resultDiv.innerHTML = "<p>姓名：" + record["姓名"] + "</p>" +
+                                  "<p>年度：" + record["年度"] + "</p>" +
+                                  "<p>小时数：" + record["小时数"] + "</p>";
           } else {
-            document.getElementById('result').innerText = 
-              `姓名: ${data.name}, 年度: ${data.year}, 小时数: ${data.hours}`;
+            resultDiv.innerHTML = "<p>" + data.message + "</p>";
           }
+        })
+        .catch(err => {
+          console.error(err);
+          document.getElementById("result").innerHTML = "<p>查询出错，请稍后重试。</p>";
         });
-    }
+    });
   </script>
 </body>
 </html>
