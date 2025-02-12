@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+<body>
+  <h1>义工小时数查询</h1>
+  <input type="text" id="student_id" placeholder="请输入学号" />
+  <button onclick="queryHours()">查询</button>
+  <div id="result"></div>
+
+  <script>
+    function queryHours() {
+      const studentId = document.getElementById('student_id').value;
+      fetch('YOUR_APPS_SCRIPT_URL?student_id=' + studentId)
+        .then(response => response.json())
+        .then(data => {
+          if (data.error) {
+            document.getElementById('result').innerText = data.error;
+          } else {
+            document.getElementById('result').innerText = 
+              `姓名: ${data.name}, 年度: ${data.year}, 小时数: ${data.hours}`;
+          }
+        });
+    }
+  </script>
+</body>
+</html>
