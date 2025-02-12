@@ -9,7 +9,7 @@
   <script>
     function queryHours() {
       const studentId = document.getElementById('student_id').value;
-      fetch('YOUR_APPS_SCRIPT_URL?student_id=' + studentId)
+      fetch('https://script.google.com/macros/s/AKfycbxaoxEtgZcOxNuR4vO8_WPnHRi8IzIVCGg6NWZbUrpjllWzdbJrM47tqtpVX76skWA/exec?student_id=' + studentId)
         .then(response => response.json())
         .then(data => {
           if (data.error) {
