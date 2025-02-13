@@ -55,7 +55,6 @@
       // 为 JSONP 动态生成一个回调函数名
       var callbackName = "jsonp_callback_" + Math.round(100000 * Math.random());
       window[callbackName] = function(data) {
-        // 处理返回的数据
         handleResponse(data);
         // 清理回调函数和 script 标签
         delete window[callbackName];
@@ -63,7 +62,7 @@
       };
 
       var script = document.createElement("script");
-      // 构造请求 URL，带上 callback 参数
+      // 将 YOUR_APPS_SCRIPT_WEB_APP_URL 替换为你部署后的 Web App URL
       script.src = "https://script.google.com/macros/s/AKfycbz5K3bq5aXC8VPfHAKN6rIrMWzms3EzJfHICJV8Y-JE-eg1r0D2CGkqzOeNPruQQKL5/exec" +
                    "?studentId=" + encodeURIComponent(studentId) +
                    "&studentName=" + encodeURIComponent(studentName) +
