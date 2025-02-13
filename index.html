@@ -2,18 +2,25 @@
 <html lang="zh">
 <head>
   <meta charset="UTF-8">
-  <title>义工小时查询</title>
+  <title>学生义工时数查询</title>
   <style>
     body { font-family: Arial, sans-serif; margin: 20px; }
-    input, button { font-size: 1em; }
+    input, button { font-size: 1em; margin: 5px 0; }
     #result { margin-top: 20px; }
+    .record { padding: 10px; border-bottom: 1px solid #ccc; }
   </style>
 </head>
 <body>
-  <h1>义工小时查询</h1>
+  <h1>学生义工时数查询</h1>
   <form id="queryForm">
-    <label for="studentId">请输入您的学号：</label>
-    <input type="text" id="studentId" name="studentId" required>
+    <div>
+      <label for="studentId">请输入学号：</label>
+      <input type="text" id="studentId" name="studentId" required>
+    </div>
+    <div>
+      <label for="studentName">请输入学生名字：</label>
+      <input type="text" id="studentName" name="studentName" required>
+    </div>
     <button type="submit">查询</button>
   </form>
   <div id="result"></div>
@@ -22,21 +29,29 @@
     document.getElementById("queryForm").addEventListener("submit", function(e) {
       e.preventDefault();
       var studentId = document.getElementById("studentId").value.trim();
-      if (!studentId) return;
+      var studentName = document.getElementById("studentName").value.trim();
+      if (!studentId || !studentName) return;
       
-      // 构造请求 URL（注意参数名 studentId 与 Apps Script 中保持一致）
-      var url = "https://script.google.com/macros/s/AKfycbwSz7BVbGXEf4YVA--TSz6j7gIryiLK53CJXJKbV3OusvlGmp7vWuzxhYN6Yq9N-Stc2A/exec" + "?studentId=" + encodeURIComponent(studentId);
+      // 构造请求 URL：参数名称必须与 Apps Script 中保持一致
+      var url = "https://script.google.com/macros/s/AKfycbzskzThxPUNC8mAVzmlLxd2FHb-Qy1l6kpzzqCmH2OUKlC7JBQsTju8AdD1wBATCJp4/exec" + "?studentId=" + encodeURIComponent(studentId) + "&studentName=" + encodeURIComponent(studentName);
       
-      // 发起请求并处理返回结果
       fetch(url)
         .then(response => response.json())
         .then(data => {
           var resultDiv = document.getElementById("result");
           if (data.status === "success") {
             var record = data.data;
-            resultDiv.innerHTML = "<p>姓名：" + record["姓名"] + "</p>" +
-                                  "<p>年度：" + record["年度"] + "</p>" +
-                                  "<p>小时数：" + record["小时数"] + "</p>";
+            // 显示查询结果，每个字段单独一行
+            resultDiv.innerHTML = "<div class='record'>" +
+              "<p><strong>学生名字：</strong>" + record["Student Legal Name (First, Middle, Last) \n 學生合法名字(名字, 姓式)"] + "</p>" +
+              "<p><strong>学号：</strong>" + record["Student ID"] + "</p>" +
+              "<p><strong>总义工时数：</strong>" + record["Total Hours"] + "</p>" +
+              "<p><strong>饼干时数：</strong>" + record["Cookie Hours"] + "</p>" +
+              "<p><strong>公园时数：</strong>" + record["Park Hours"] + "</p>" +
+              "<p><strong>God's Pantry时数：</strong>" + record["Godpantry hours"] + "</p>" +
+              "<p><strong>Chino Food Bank时数：</strong>" + record["chino FB hours"] + "</p>" +
+              "<p><strong>特殊项目时数：</strong>" + record["special hours"] + "</p>" +
+              "</div>";
           } else {
             resultDiv.innerHTML = "<p>" + data.message + "</p>";
           }
