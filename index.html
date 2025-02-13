@@ -33,7 +33,7 @@
       if (!studentId || !studentName) return;
       
       // 构造请求 URL：参数名称必须与 Apps Script 中保持一致
-      var url = "https://script.google.com/macros/s/AKfycbzskzThxPUNC8mAVzmlLxd2FHb-Qy1l6kpzzqCmH2OUKlC7JBQsTju8AdD1wBATCJp4/exec" + "?studentId=" + encodeURIComponent(studentId) + "&studentName=" + encodeURIComponent(studentName);
+      var url = "https://script.google.com/macros/s/AKfycbzFbwGlKfOpm-x-20NWitnFY9MeUF9JW3iiVeypOdyVpsKWksyRKpgPbnws9664lPVy/exec" + "?studentId=" + encodeURIComponent(studentId) + "&studentName=" + encodeURIComponent(studentName);
       
       fetch(url)
         .then(response => response.json())
